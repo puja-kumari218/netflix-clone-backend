@@ -1,9 +1,10 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import prisma from "../utils/db.js";
-import { comparePassword, hashPassword } from "../utils/lib.js";
+import { comparePassword, hashPassword, generateToken } from "../utils/lib.js";
 
 const login = asyncHandler(async (req, res) => {
-  const {email, password} = req.body;
+  const { email, password } = req.body;
+
   if (!email) {
     return res.status(400).send("Please enter email");
   }
@@ -26,7 +27,18 @@ const login = asyncHandler(async (req, res) => {
     return res.status(401).send("Invalid email or password");
   }
 
-  return res.send("Login successful");
+  // generate a JWT token
+  const token = generateToken(user.id);
+
+  return res.json({
+    message: "Login successful",
+    token: token,
+    user: {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+    },
+  });
 });
 
 const register = async (req, res) => {
@@ -70,7 +82,9 @@ const register = async (req, res) => {
     return res.status(500).send("Something went wrong!");
   }
 
-  return res.send("User registered Successfully");
+  return res.json({
+    message: "Register successful",
+  });
 };
 
 export { login, register };
