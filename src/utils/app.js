@@ -11,8 +11,12 @@ app.use(express.urlencoded({ extended: true }));
 
 import healthcheckRoute from "../routes/healthcheck.route.js";
 import authRoute from "../routes/auth.route.js";
+import movieRoute from "../routes/movie.route.js";
+
 
 app.use("/api/healthcheck", healthcheckRoute);
 app.use("/api/auth", authRoute);
+app.use("/api/movie", movieRoute)
+
 
 export { app };
